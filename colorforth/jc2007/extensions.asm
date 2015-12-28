@@ -1,4 +1,4 @@
-.intel_syntax
+.intel_syntax noprefix
 .code32
 ;# extensions to colorForth better written in assembly language
 ;# i'm not of the opinion that coding in machine language is a step forward

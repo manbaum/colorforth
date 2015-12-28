@@ -1,4 +1,4 @@
-.intel_syntax ;#colorforth, 2001 jul 22, chuck moore, public domain
+.intel_syntax noprefix ;#colorforth, 2001 jul 22, chuck moore, public domain
 
 ;# can't use loopnz in 32-bit mode
 .macro next adr
@@ -246,7 +246,7 @@ mfind: ;# find pointer to macro code
 find: ;# locate code of high- or low-level Forth word
     mov  ecx, forths + loadaddr ;# current number of Forth definitions
     push edi ;# save destination pointer so we can use it
-    lea  edi, [forth0 + loadaddr -4+ecx*4] ;# point it to last packed Forth word
+    lea  edi, [forth0 + loadaddr - 4 + ecx * 4] ;# last packed Forth word
 0:  std  ;# search backwards
     repne scasd ;# continue moving until we hit a match
     cld  ;# clear direction flag again
@@ -1470,7 +1470,7 @@ e:  dup_
     mov  dword ptr keyc + loadaddr, yellow ;# default key color, yellow
 ;# this is the main loop
 0:  call key
-    call [ekeys + loadaddr + eax*4]
+    call [ekeys + loadaddr + eax * 4]
     drop
     jmp  0b
 
@@ -1478,8 +1478,8 @@ e:  dup_
 eout: pop  eax
     drop
     drop
-    mov  dword ptr aword + loadaddr, offset ex1 + loadaddr
-    mov  dword ptr anumber + loadaddr, offset nul + loadaddr
+    mov  dword ptr aword+loadaddr, offset ex1 + loadaddr
+    mov  dword ptr anumber+loadaddr, offset nul + loadaddr
     mov  byte ptr alpha0+loadaddr+4*4, 0
     mov  dword ptr alpha0+loadaddr+4, offset nul0 + loadaddr
     mov  dword ptr keyc + loadaddr, yellow ;# restore key color to yellow

@@ -1,4 +1,4 @@
-.intel_syntax ;# floppy boot segment
+.intel_syntax noprefix ;# floppy boot segment
 ;# 0x000-0x400 is BIOS interrupt table
 ;# 0x400-0x500 is BIOS system information area
 ;# we can use starting at 0x500

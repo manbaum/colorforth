@@ -1,4 +1,4 @@
-.intel_syntax ;#generic graphics
+.intel_syntax noprefix ;#generic graphics
 
 ;# VESA mode numbers and screen sizes,
 ;# from http://www.mat.univie.ac.at/~gerald/laptop/vesafb.txt
