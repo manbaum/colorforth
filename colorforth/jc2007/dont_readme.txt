@@ -1,22 +1,22 @@
-What I like about colorForth
+what I like about colorForth
 
 it's small and elegant; an operating system/IDE/UI in a 64-k box.
 
 it's free, in the public domain thanks to Chuck Moore.
 
-What I don't like about colorForth
+what I don't like about colorForth
 
-these complaints pertain to the 2001 sources. i haven't yet found complete
-sources for the 2005 release, and since i can't get the binaries themselves
-to work, i can't use it. every binary i've found for download has the "cyl 1"
-bug that causes the bulk of high-level code to fail to load. wtf? yes, i could
+these complaints pertain to the 2001 sources. I haven't yet found complete
+sources for the 2005 release, and since I can't get the binaries themselves
+to work, I can't use it. every binary I've found for download has the "cyl 1"
+bug that causes the bulk of high-level code to fail to load. wtf? yes, I could
 patch the binaries but they have other incompatibilities with my available 
 systems too.
 
 nothing similar to a bss segment, which is zeroed at boot and then used
 for variables and string space. having and using something like this would
 reduce the incidence of the "cylinder" bug, which skips loading the second
-cylinder on every colorforth binary i've found on the web. what happens is that
+cylinder on every colorforth binary I've found on the web. what happens is that
 the image contains a 1 in the 'cylinder' location; this 1 overwrites the 0
 that the bootloader had, when cylinder 0 loads over the running code. then
 the cylinder variable is incremented from 1 to 2, skipping cylinder 1, the
@@ -43,4 +43,4 @@ change them in two places or more: a BAD THING.
 be proud of? using BIOS for disk access would make colorForth available to a
 lot more people without having to roll their own low-level disk access code.
 
-These are the problems i'm trying to address in this edition of colorForth.
+these are the problems I'm trying to address in this edition of colorForth.
