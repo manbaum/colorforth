@@ -79,18 +79,18 @@ endif
 	 -o $*.o $<
 	objcopy $*.o -O binary $@
 newcode: color.asm newcode.dat appcode.dat
-	touch $<
+	rm -f color.com
 	$(MAKE) I_HAVE_AT_LEAST_1GB_RAM=1 color.com
 kbd:	color.asm
-	touch $<
+	rm -f color.com
 	$(MAKE) SMALLSCREEN=1 DEBUG_KBD=1 color.com
 small:	color.asm
-	touch $<
 	$(MAKE) SMALLSCREEN=1 newcode
 cm2001: color.asm
-	touch $<
+	rm -f color.com
 	$(MAKE) CM2001=1 color.com
 jf2005: color.asm
+	rm -f color.com
 	$(MAKE) DMA=1 AGP=1 E1_STROBE=1 QUESTIONABLE=1 color.com
 /tmp/color.dsm: ../color.com
 	objdump --target binary \
@@ -115,9 +115,9 @@ env:
 %.txt:	%.com cf2text
 	cf2text $< > $@
 vmclean:
-	rm -f *.{log,vm??,lck,nvram}
+	rm -f *.log *.vm?? *.lck *.nvram
 clean: vmclean
-	rm -f *.{o,bin,out,dmp,lst,iso,dat,ima,img}
+	rm -f *.o *.bin *.out *.dmp *.lst *.iso *.dat *.ima *.img
 	rm -rf FDOEMCD
 	[ -d release ] && cd release && $(MAKE) clean || true
 errors:
