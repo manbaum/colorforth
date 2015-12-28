@@ -215,7 +215,7 @@ relocate:  ;# move code from where DOS or BIOS put it, to where we want it
     rep  movsw
 ;# now we need to do a tricky jump from here to where the relocated code is,
 ;# otherwise we still run the risk of a code overwrite.
-    mov  ax, (offset 5f - offset start)
+    mov  ax, offset (5f-start)
     push es
     push ax
     lret ;# "return" to following address, in the relocated segment

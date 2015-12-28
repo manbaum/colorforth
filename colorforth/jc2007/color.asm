@@ -627,24 +627,24 @@ rm: .long hc*iw  ;# right margin, 0x1012 (iw already includes padding)
 fov: .long 10*(2*vp+vp/2)
 
 nc_: dup_
-    mov  eax, (loadaddr + (offset nc-offset start)) / 4
+    mov  eax, loadaddr + offset ((nc-start) / 4)
     ret
 
 xy_: ;# return xy address in words to high-level application
     dup_
-    mov  eax, (loadaddr + (offset xy-offset start)) / 4
+    mov  eax, loadaddr + offset ((xy-start) / 4)
     ret
 
 fov_: dup_
-    mov  eax, (loadaddr + (offset fov-offset start)) / 4
+    mov  eax, loadaddr + offset ((fov-start) / 4)
     ret
 
 sps: dup_
-    mov  eax, (loadaddr + (offset spaces-offset start)) / 4
+    mov  eax, loadaddr + offset ((spaces-start) / 4)
     ret
 
 last_: dup_
-    mov  eax, (loadaddr + (offset last-offset start)) / 4
+    mov  eax, loadaddr + offset ((last-start) / 4)
     ret
 
 .include "gen.asm" ;# cce.asm pio.asm ati128.asm ati64.asm gen.asm
@@ -1021,7 +1021,7 @@ hex: mov dword ptr base + loadaddr, 16
     mov dword ptr board + loadaddr, offset octals + loadaddr - 4
     ret
 
-octal: xor dword ptr current + loadaddr, (offset decimal-offset start) ^ (offset hex-offset start)
+octal: xor dword ptr current + loadaddr, offset (decimal-start) ^ offset (hex-start)
     xor  byte ptr numb0 + loadaddr + 18, 041 ^ 016 ;# f vs 9
     call [current + loadaddr]
     jmp  number0
