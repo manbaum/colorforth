@@ -47,15 +47,20 @@ GAS := as -R -Z -L
 DEFINES := $(shell cat *.asm | grep '\.ifn\?def' | \
  awk '{print $$2}' | sort | uniq)
 COLINUX := /cygdrive/c/Program\ Files/coLinux
-JC2007 := $(shell cygpath -w $(PWD))
+JC2007 := $(shell if which cygpath >/dev/null; \
+	 then cygpath -w $(PWD); \
+	 else echo $(PWD); fi)
 BOCHS := /cygdrive/c/Program\ Files/Bochs-2.3
 VMWARE := /cygdrive/c/Program\ Files/VMWare/VMware\ Player
-BXSHARE := $(shell cygpath -w $(BOCHS))
+BXSHARE := $(shell if which cygpath >/dev/null; \
+	 then cygpath -w $(BOCHS); \
+	 else dirname $$(which bochs); fi)
 TIMESTAMP := $(shell date +%Y-%m-%d-%H:%M:%S)
 DEBUGGING := 1
 CDBOOT := cfboot.iso
 WIN98 := win98_img.IMA
-LARGEST_CF := /usr/src/howerd/cfdos4/CFDOS4.BLK
+#LARGEST_CF := /usr/src/howerd/cfdos4/CFDOS4.BLK
+LARGEST_CF := /usr/src/www.dnd.utwente.nl/\~tim/colorforth/cfdosv4/unzipped
 LOADBLOCKS := $(shell du $(LARGEST_CF) | awk {'print $$1'})
 VIRTUAL_SECTORS := $(shell expr $(LOADBLOCKS) \* 2)
 export
@@ -105,8 +110,8 @@ asmwdiff: /tmp/color.dsm /tmp/gas_color.dsm
 	diff -y -W160 $+
 asmdiff: /tmp/color.dsm /tmp/gas_color.dsm
 	diff $+
-set:
-	set
+env:
+	env
 %.txt:	%.com cf2text
 	cf2text $< > $@
 vmclean:
