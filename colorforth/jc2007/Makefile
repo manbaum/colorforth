@@ -43,7 +43,7 @@ recipes += octal hex macro includes directives unused
 recipes += byte word dword here equ labels dup ascii
 recipes += offset orgminus use16 use32
 sed := sed $(foreach regex, $(recipes), $($(regex)))
-GAS := as -R -Z -L
+GAS := as -R -Z
 DEFINES := $(shell cat *.asm | grep '\.ifn\?def' | \
  awk '{print $$2}' | sort | uniq)
 COLINUX := /cygdrive/c/Program\ Files/coLinux

@@ -1126,18 +1126,18 @@ hdot: mov  ecx, 8
  * displaying a number off the stack */
 dot: mov  ecx, 7
 0:  call odig
-    jnz  @h
+    jnz  2f
     drop
     next 0b
     inc  ecx
 0:  call odig
-@h1: call edig
+1:  call edig
     next 0b
     call space
     drop
     ret
-@h: inc  ecx
-    jmp  @h1
+2:  inc  ecx
+    jmp  1b
 
 qdot: ;# display number as decimal or hexadecimal (hex)
     cmp dword ptr base + loadaddr, 10 ;# is current base decimal?
