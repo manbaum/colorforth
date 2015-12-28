@@ -211,13 +211,15 @@ FORTH darker, [TEXT], n-, 2*, vframe, +, dup, w@,
  FORTH [COMPILEWORD], 0, +, drop, if,
  FORTH [EXECUTE], dark, @, swap, +w!, ";", then, drop, ";"
 FORTH z@, 2*, [EXECUTE], z, @, +, dup, @, swap, 1+, @, ";"
-FORTH ge2, ;# 'if' tests true (nz) if abs(n) >= 2
- FORTH [COMPILEWORD], abs, [EXECUTESHORT], -20000, [EXECUTE], fixed,
+FORTH ge4, ;# 'if' tests true (nz) if abs(n) > 4
+ FORTH [COMPILEWORD], abs, [EXECUTESHORT], -40000, [EXECUTE], fixed,
  FORTH [COMPILEWORD], +, drop, -if, 0, drop, then, ";"
 FORTH fx*, [COMPILELONGHEX], 10000000, */, ";"
-FORTH escaped, dup, z@, ge2, if, drop, drop, ";",
- FORTH [COMPILEWORD], then, ge2, if, drop, ";",
- FORTH [COMPILEWORD], then, z@, dup, fx*, swap, dup, fx*, +, 2/, ge2, ";"
+FORTH four, dup, z@, ge4, if, drop, drop, ";",
+ FORTH [COMPILEWORD], then, ge4, if, drop, ";",
+ FORTH [COMPILEWORD], then, dup, z@, dup, fx*, ge4, if, drop, drop, ";"
+ FORTH [COMPILEWORD], then, dup, fx*, ge4, if, drop, ";"
+ FORTH [COMPILEWORD], then, z@, dup, fx*, swap, dup, fx*, +, ge4, ";"
 FORTH z!, 2*, [EXECUTE], z, @, +, dup, push, 1+, !, pop, !, ";"
 FORTH [EXECUTESHORT], 2, [EXECUTE], +load,
  FORTH [EXECUTESHORT], 4, [EXECUTE], +load
@@ -232,9 +234,9 @@ FORTH reinit, sets, [COMPILEWORD], xspan, and, [COMPILEWORD], yspan
 FORTH init, sets, screen, boundaries, based, on, zoom, and, pan, settings
 FORTH darker, changes, pixel, color
 FORTH z@, returns, complex, number, at, specified, index
-FORTH ge2, checks, if, fixed-point, number, above, 2
+FORTH ge4, checks, if, fixed-point, number, above, 4
 FORTH fx*, multiplies, two, fixed-point, numbers
-FORTH escaped, checks, if, complex, number, above, 2
+FORTH four, checks, if, complex, number, above, 4
 FORTH z!, stores, complex, number, at, specified, index
 BLOCK
 FORTH x0, [COMPILELONGHEX], 10000000, hp, */, ;# scale to A(3,28) fixed
@@ -247,14 +249,14 @@ FORTH z0!, [TEXT], n-, hp, /mod, y0, z0, 1+, !, x0, z0, !, ";"
 FORTH z0@, [TEXT], -nn, [EXECUTE], z0, @, z0, 1+, @, ";"
 FORTH z+c, [TEXT], n-, dup, z0!, dup, push, z@, z0@, swap, push, +,
  FORTH [COMPILEWORD], swap, pop, +, swap, pop, z!, ";"
-FORTH z**2, [TEXT], n-, dup, push, z@, dup, fx*, dup, 2/, ge2, swap, ;# b**2 a
- FORTH [COMPILEWORD], if, pop, z!, ";", then, dup, fx*, dup, 2/, ge2, swap,
+FORTH z**2, [TEXT], n-, dup, push, z@, dup, fx*, dup, ge4, swap, ;# b**2 a
+ FORTH [COMPILEWORD], if, pop, z!, ";", then, dup, fx*, dup, ge4, swap,
  FORTH [COMPILEWORD], if, pop, z!, ";", then, negate, +,
- FORTH [COMPILEWORD], pop, dup, push, z@, fx*, dup, 2/, ge2,
+ FORTH [COMPILEWORD], pop, dup, push, z@, fx*, dup, ge4,
  FORTH [COMPILEWORD], if, pop, z!, ";", then, 2*, pop, z!, ";"
 FORTH z2+c, [TEXT], n-, dup, z**2, z+c, ";"
-FORTH update, [TEXT], n-, dup, escaped, if, drop, ";", then,
- FORTH [COMPILEWORD], dup, z2+c, dup, escaped, if, drop, ";", then, darker, ";"
+FORTH update, [TEXT], n-, dup, four, if, drop, ";", then,
+ FORTH [COMPILEWORD], dup, z2+c, dup, four, if, drop, ";", then, darker, ";"
 FORTH iter,
  FORTH [EXECUTE], pixel, @, [EXECUTE], count, @, for, dup, update,
  FORTH [COMPILEWORD], 1+, [EXECUTE], hp, [EXECUTE], vp, [EXECUTE], *, mod,
@@ -294,16 +296,16 @@ FORTH +zoom, zooms, in, 2, times, closer
 FORTH -zoom, zooms, out
 BLOCK
 FORTH left, [EXECUTE], xspan, @, [COMPILESHORT], 10, /, negate, dup,
- FORTH [EXECUTE], xl, @, +, 2/, ge2, if, drop, ";", then, dup,
+ FORTH [EXECUTE], xl, @, +, ge4, if, drop, ";", then, dup,
  FORTH [EXECUTE], xl, +!, [EXECUTE], xr, +!, 0, [EXECUTE], xspan, !, ";"
 FORTH right, [EXECUTE], xspan, @, [COMPILESHORT], 10, /, dup,
- FORTH [EXECUTE], xr, @, +, 2/, ge2, if, drop, ";", then, dup,
+ FORTH [EXECUTE], xr, @, +, ge4, if, drop, ";", then, dup,
  FORTH [EXECUTE], xl, +!, [EXECUTE], xr, +!, 0, [EXECUTE], xspan, !, ";"
 FORTH up, [EXECUTE], yspan, @, [COMPILESHORT], 10, /, dup,
- FORTH [EXECUTE], yt, @, +, 2/, ge2, if, drop, ";", then, dup,
+ FORTH [EXECUTE], yt, @, +, ge4, if, drop, ";", then, dup,
  FORTH [EXECUTE], yt, +!, [EXECUTE], yb, +!, 0, [EXECUTE], xspan, !, ";"
 FORTH down, [EXECUTE], yspan, @, [COMPILESHORT], 10, /, negate, dup,
- FORTH [EXECUTE], yb, @, +, 2/, ge2, if, drop, ";", then, dup,
+ FORTH [EXECUTE], yb, @, +, ge4, if, drop, ";", then, dup,
  FORTH [EXECUTE], yt, +!, [EXECUTE], yb, +!, 0, [EXECUTE], xspan, !, ";"
 FORTH nul, ";"
 FORTH h, pad, nul, nul, accept, nul,
@@ -337,8 +339,8 @@ FORTH  ok, init, show, [EXECUTE], xspan, @, -1, +, drop, -if,
  FORTH [EXECUTE], yt, @, [EXECUTE], yb, @, +, 2/, fx.,
  FORTH [COMPILEWORD], ";"
 ;# test words
-;#FORTH g, ge2, if, 1, ";", then, 0, ";"
-;#FORTH f, escaped, if, 1, ";", then, 0, ";"
+;#FORTH g, ge4, if, 1, ";", then, 0, ";"
+;#FORTH f, four, if, 1, ";", then, 0, ";"
 BLOCK
 FORTH left, pans, left, 1/10, of, screen
 FORTH right, pans, right
