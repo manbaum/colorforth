@@ -145,11 +145,6 @@
  .endif
 .endm
 
-/* test cases for common problems
-BLOCK 19
-FORTH "jul31", "colored", "keypad", "number"
-BLOCK
-*/
 BLOCK 18
 FORTH "[TEXT]", "colorforth",  "[TEXTCAPITALIZED]", "jul31",  "[TEXTCAPITALIZED]", "chuck",  "[TEXTCAPITALIZED]", "moore",  "[TEXTCAPITALIZED]", "public",  "[TEXTCAPITALIZED]", "domain",  "[EXECUTESHORT]", "24",  "[EXECUTE]", "load",  "[EXECUTESHORT]", "26",  "[EXECUTE]", "load",  "[EXECUTESHORT]", "28",  "[EXECUTE]", "load",  "[EXECUTESHORT]", "30",  "[EXECUTE]", "load"
 FORTH "dump",  "[COMPILESHORT]", "32",  "load",  ";"
@@ -167,6 +162,7 @@ FORTH "north",  "[COMPILESHORT]", "46",  "load",  ";"
 FORTH "colors",  "[COMPILESHORT]", "56",  "load",  ";",
 FORTH  "[EXECUTE]", "mark",  "[EXECUTE]", "empty"
 BLOCK 19
+FORTH "jul31", "colored", "keypad", "number"
 BLOCK 20
 BLOCK 21
 BLOCK 22
