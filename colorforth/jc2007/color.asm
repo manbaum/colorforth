@@ -37,8 +37,9 @@
     .ifeq stoppacking
      .if bitcount - bitshift < 0
       .warning "negative shift count at word \"\word\" letter \"\letter\""
+     .else
+      .equ packed, packed | (huffcode << (bitcount - bitshift))
      .endif
-     .equ packed, packed | (huffcode << (bitcount - bitshift))
      .equ bitcount, bitcount - bitshift
     .endif
    .else
