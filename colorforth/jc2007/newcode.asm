@@ -47,7 +47,7 @@
 
 .macro NEXTTYPE word, function
  .ifdef DEBUG_FORTH
-  ;#.print "comparing \"\word\" with \"\function\""
+  .print "comparing \"\word\" with \"\function\""
  .endif
  .ifeqs "\word", "\function"
   .equ default_typetag, type
