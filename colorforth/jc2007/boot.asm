@@ -79,8 +79,8 @@ real_mode_idt:
 .code16
 start0:
     cmp  word ptr cs:0, 0x20cd ;# INT 20h at start of .com program header
-    jnz  0f
-    dec  byte ptr [cs: bootmode + 0x100]
+    jnz  0f ;# not a .com program, so must be bootsector
+    dec  byte ptr [cs: bootmode + 0x100] ;# set indicator byte
 0:  cli
     push cs ;# need to set DS=CS, especially on VMWare, DS was 0x40
     pop  ds
@@ -197,9 +197,12 @@ shownumber: ;# alternate entry point, preload DX register
 
 relocate:  ;# move code from where DOS or BIOS put it, to where we want it
 ;# it would seem to be trivial, but in cases where the 64K span of source
-;# and destination overlap, we overwrite this code and crash. it happened.
-;# so now we move everything to end of 640K base RAM and then move back
-;# to its final destination.
+;# and destination overlap, we overwrite this relocation code while it is
+;# running, and crash. it happened.
+;# one way to avoid it is to move everything to end of 640K base RAM
+;# and then move it back to its final destination.
+;# but that is inefficient. so instead we just move the relocation code to
+;# the stack, which should be out of the way.
     cmp  byte ptr bootmode + loadaddr, 0xfe ;# already in correct place?
     jz   9f  ;# if so, skip the difficult stuff
     mov  ax, (0xa0000 - 0x10000) >> 4 ;# segment address of relocation
