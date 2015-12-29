@@ -95,6 +95,9 @@
 .macro FORTHWORD word
  .equ packed, 0; .equ bits, 28
  ;# only 28 bits are used for a word, the low 4 bits are for the type tag
+ .ifdef DEBUG_FORTH
+  .print "compiling \"\word\""
+ .endif
  .irpc letter, "\word"
   GETCODE "\letter"
   .equ maskbits, (1 << bits) - 1
