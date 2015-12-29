@@ -151,3 +151,12 @@
 BLOCK 19
 FORTH "jul31", "colored", "keypad", "number"
 BLOCK
+.quad 1 >> -1
+.quad 1 >> -7
+.quad 1 >> -15
+.quad 1 << -1
+.quad 1 << -7
+.quad 1 << -15
+.quad 1 << 1
+.quad 1 << 7
+.quad 1 << 15
