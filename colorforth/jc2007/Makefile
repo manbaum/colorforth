@@ -118,7 +118,7 @@ env:
 vmclean:
 	rm -f *.log *.vm?? *.lck *.nvram
 clean: vmclean
-	rm -f *.o *.bin *.out *.dmp *.lst *.iso *.dat *.ima *.img
+	rm -f *.o *.bin *.out *.dmp *.lst *.iso *.dat *.ima *.img *.pyc
 	rm -rf FDOEMCD
 	[ -d release ] && cd release && $(MAKE) clean || true
 errors:
