@@ -1,4 +1,5 @@
-.equ blockstart, .; .equ blocknumber, -1
+.equ blockstart, .;
+.equ blocknumber, -1
 
 ;# pad to block boundary
 .macro BLOCK number
@@ -91,7 +92,8 @@
 .endm
 
 .macro FORTHWORD word
- .equ packed, 0; .equ bits, 28
+ .equ packed, 0
+ .equ bits, 28
  ;# only 28 bits are used for a word, the low 4 bits are for the type tag
  debug "compiling \"\word\""
  .irpc letter, "\word"
@@ -103,11 +105,15 @@
    .equ bits, bits - shift
   ;# otherwise will the prefix plus all set bits fit in remaining space?
   .elseif testcode == huffcode
+   debug "last letter of \"\word\" being packed with negative shift count"
    .equ packed, (packed << bits) | (huffcode >> (shift - bits))
    .equ bits, 0
   .else
+   debug "\"\word\" being extended"
    .long (packed << (bits + 4)) | typetag
-   .equ packed, huffcode; .equ bits, 28 - shift; .equ typetag, 0
+   .equ packed, huffcode
+   .equ bits, 28 - shift
+   .equ typetag, 0
   .endif
  .endr
  .ifne packed
@@ -118,11 +124,12 @@
 .macro GETCODE letter
 ;# see more documentation on this under 'pack' in color.asm source
  .nolist  ;# don't pollute listing with all these byte comparisons
- .equ huffindex, 0; .equ huffcode, 0
+ .equ huffindex, 0
+ .equ huffcode, 0
  .irpc huffman, " rtoeanismcylgfwdvpbhxuq0123456789j-k.z/;:!+@*,?"
   .ifeqs "\letter", "\huffman"
    .equ shift, 4 + (huffindex / 8)
-   .ifge shift - 6
+   .ifge shift - 6  ;# codes can only be 4, 5, or 7 bits long
     .equ shift, 7
    .endif
    .exitm
@@ -154,12 +161,3 @@
 BLOCK 19
 FORTH "jul31", "colored", "keypad", "number"
 BLOCK
-.quad 1 >> -1
-.quad 1 >> -7
-.quad 1 >> -15
-.quad 1 << -1
-.quad 1 << -7
-.quad 1 << -15
-.quad 1 << 1
-.quad 1 << 7
-.quad 1 << 15

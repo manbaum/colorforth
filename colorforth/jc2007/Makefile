@@ -1,3 +1,4 @@
+SHELL := /bin/bash
 sources := $(wildcard *.asm)
 ftpfiles := $(foreach file, $(sources), \
  $(shell echo $(notdir $(file)) | tr 'a-z' 'A-Z'))
@@ -76,7 +77,7 @@ endif
 	 $(if $($(definition)),--defsym $(definition)=$($(definition)))) \
 	 -ahlns=$*.lst --listing-cont-lines=10 \
 	 --reduce-memory-overheads \
-	 -o $*.o $<
+	 -o $*.o $< 2>&1 | tee $*.log
 	objcopy $*.o -O binary $@
 newcode: color.asm newcode.dat appcode.dat
 	rm -f color.com
