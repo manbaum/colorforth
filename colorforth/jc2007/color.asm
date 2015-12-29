@@ -31,7 +31,7 @@
   .irpc huffman, " rtoeanismcylgfwdvpbhxuq0123456789j-k.z/;:!+@*,?"
    .ifeqs "\letter", "\huffman"
     .equ bitshift, 4 + (huffindex / 8)
-    .ifge bitshift - 6
+    .ifge bitshift - 6  ;# bitcounts can only be 4, 5, or 7
      .equ bitshift, 7
     .endif
     .ifeq stoppacking
