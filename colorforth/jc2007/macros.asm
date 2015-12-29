@@ -3,10 +3,10 @@
 ;# pad to block boundary
 .macro BLOCK number
  .ifb \number
-  .print "compiling next block"
+  debug "compiling next block"
   .equ blocknumber, blocknumber + 1
  .else
-  .print "compiling block \number"
+  debug "compiling block \number"
   .equ blocknumber, \number
  .endif
  .ifdef ABSOLUTE_BLOCKNUMBER
@@ -46,9 +46,7 @@
 .endm
 
 .macro NEXTTYPE word, function
- .ifdef DEBUG_FORTH
-  .print "comparing \"\word\" with \"\function\""
- .endif
+ debug "comparing \"\word\" with \"\function\""
  .ifeqs "\word", "\function"
   .equ default_typetag, type
  .else
@@ -95,9 +93,7 @@
 .macro FORTHWORD word
  .equ packed, 0; .equ bits, 28
  ;# only 28 bits are used for a word, the low 4 bits are for the type tag
- .ifdef DEBUG_FORTH
-  .print "compiling \"\word\""
- .endif
+ debug "compiling \"\word\""
  .irpc letter, "\word"
   GETCODE "\letter"
   .equ maskbits, (1 << bits) - 1
@@ -147,6 +143,13 @@
   .equ huffcode, 0b01100000
  .endif
 .endm
+
+.macro debug string
+ .ifdef DEBUG_FORTH
+  .print "\string"
+ .endif
+.endm
+
 /* test cases */
 BLOCK 19
 FORTH "jul31", "colored", "keypad", "number"
