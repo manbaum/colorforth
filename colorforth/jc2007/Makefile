@@ -72,7 +72,7 @@ ifdef I_HAVE_AT_LEAST_1GB_RAM
 endif
 	$(MAKE) color.dat
 	dd if=color.dat of=$@ bs=1024 count=63
-%.dat:	%.asm
+%.dat:	%.asm oldcolor.dat
 	$(GAS) $(foreach definition,$(DEFINES),\
 	 $(if $($(definition)),--defsym $(definition)=$($(definition)))) \
 	 -ahlns=$*.lst --listing-cont-lines=10 \
@@ -150,7 +150,8 @@ bochs23: ../test/b.img
 vmware: ../test/b.img
 	cd ../test && $(MAKE) vmclean vmware
 qemu:	../test/b.img
-	cd ../test && $(MAKE) vmclean qemu
+	qemu-system-i386 -boot order=a \
+	 -drive file=../test/b.img,index=0,if=floppy,format=raw
 htmldiff: /tmp/color_pydump.html /tmp/color.html
 	rm -f $+
 	$(MAKE) $+
