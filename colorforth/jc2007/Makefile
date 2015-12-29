@@ -153,8 +153,9 @@ vmware: ../test/b.img
 qemu:	../test/b.img
 	qemu-system-i386 -boot order=a \
 	 -drive file=../test/b.img,index=0,if=floppy,format=raw $(GDB)
-qemu-dbg: ../test/b.img
-	$(MAKE) GDB="-s -S" qemu
+qemu-gdb: ../test/b.img
+	$(MAKE) GDB="-s -S" qemu &
+	gdb -symbols color.o  # gets other options from $(PWD)/.gdbinit
 htmldiff: /tmp/color_pydump.html /tmp/color.html
 	rm -f $+
 	$(MAKE) $+
