@@ -99,13 +99,17 @@
  .irpc letter, "\word"
   GETCODE "\letter"
   .equ maskbits, (1 << bits) - 1
-  .equ testcode, (huffcode >> (shift - bits) & maskbits) << (shift - bits)
+  .if shift - bits >= 0
+   .equ testcode, (huffcode >> (shift - bits) & maskbits) << (shift - bits)
+  .else
+   .equ testcode, -1  ;# ensures huffcode cannot match
+  .endif
   .if bits - shift >= 0
    .equ packed, (packed << shift) | huffcode
    .equ bits, bits - shift
   ;# otherwise will the prefix plus all set bits fit in remaining space?
   .elseif testcode == huffcode
-   debug "last letter of \"\word\" being packed with negative shift count"
+   debug "trailing 0 bits of last letter of \"\word\" being truncated"
    .equ packed, (packed << bits) | (huffcode >> (shift - bits))
    .equ bits, 0
   .else
