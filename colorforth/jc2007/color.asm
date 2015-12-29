@@ -36,7 +36,8 @@
     .endif
     .ifeq stoppacking
      .if bitcount - bitshift < 0
-      .warning "negative shift count at word \"\word\" letter \"\letter\""
+      .warning "skipping negative shift count:"
+      .warning " dropping letter \"\letter\" from end of word \"\word\""
      .else
       .equ packed, packed | (huffcode << (bitcount - bitshift))
      .endif
