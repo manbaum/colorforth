@@ -155,7 +155,7 @@ start1:
     jmp  accept ;# wait for keyhit
 
 ;# This version of colorforth has cooperative round-robin multi-tasking.
-;# the tasks are: god (the forth kernel), and main
+;# the tasks are: god (the "graphic output display"), and main
 ;# Each has two grow-down stacks; 's' indicates the
 ;# return stack, 'd' indicates the data stack.  Thus 'gods' and 'godd'
 ;# are the tops of the return and data stacks, respectively, for the
