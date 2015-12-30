@@ -85,6 +85,8 @@
 .endm
 
 ;# Memory map: 'xxxx' amounts vary depending on chosen stack size
+;# NOTE: 'god' and 'gods' refer to the "Graphic Output Display" task;
+;# the acronyms have nothing to do with ontological matters!
 ;#   100000 dictionary (grows upwards)
 ;#    a0000 end of available low RAM on most systems, no more code can load 
 ;#    xxxxx free

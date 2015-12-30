@@ -219,6 +219,7 @@ relocate:  ;# move code from where DOS or BIOS put it, to where we want it
 ;# now we need to do a tricky jump from here to where the relocated code is,
 ;# otherwise we still run the risk of a code overwrite.
     mov  ax, offset (5f-start)
+    add  ax, bp ;# correct to actual offset from where BIOS loaded code
     push es
     push ax
     lret ;# "return" to following address, in the relocated segment
