@@ -61,8 +61,10 @@ TIMESTAMP := $(shell date +%Y-%m-%d-%H:%M:%S)
 DEBUGGING := 1
 CDBOOT := cfboot.iso
 WIN98 := win98_img.IMA
-#LARGEST_CF := /usr/src/howerd/cfdos4/CFDOS4.BLK
-LARGEST_CF := /usr/src/www.dnd.utwente.nl/\~tim/colorforth/cfdosv4/unzipped
+# last CF_SOURCE is the one being used
+CF_SOURCE := /usr/src/howerd/cfdos4
+CF_SOURCE := /usr/src/www.dnd.utwente.nl/\~tim/colorforth/cfdosv4/unzipped
+LARGEST_CF := $(CF_SOURCE)/CFDOS4.BLK
 LOADBLOCKS := $(shell du $(LARGEST_CF) | awk {'print $$1'})
 VIRTUAL_SECTORS := $(shell expr $(LOADBLOCKS) \* 2)
 export

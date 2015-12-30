@@ -55,10 +55,6 @@ Programmer's notes:
 
 BUGS
 ----
-
-2015-12-30: running under Qemu, after P0026 shows in upper right-hand corner,
-            EDI is at 0xb4400, and during the process of moving the 4800 bytes
-            of the floppy buffer into high RAM, the screen memory at 0xb8000
-            is overwritten.
+(none known active as of 2012-12-30)
 
 John Comeau <jc@unternet.net>
