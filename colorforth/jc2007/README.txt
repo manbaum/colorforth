@@ -47,9 +47,18 @@ Programmer's notes:
   saving it. ecx is sometimes safe but it may be wise to save that too.
 
 * after running 'make qemu', remember that the b.img you modified with 'save'
-  is the one in /cygdrive/c/Program\ Files/QEMU/.
+  may be located in a different directory than you might expect. find all
+  copies and check timestamps.
 
 * inserting a 'hlt' into bootcode will enable you to see if VMWare reached it,
   'grep halt ../test/vmware.log'
 
-jcATunternet.net
+BUGS
+----
+
+2015-12-30: running under Qemu, after P0026 shows in upper right-hand corner,
+            EDI is at 0xb4400, and during the process of moving the 4800 bytes
+            of the floppy buffer into high RAM, the screen memory at 0xb8000
+            is overwritten.
+
+John Comeau <jc@unternet.net>
