@@ -151,7 +151,7 @@ bochs23: ../test/b.img
 vmware: ../test/b.img
 	cd ../test && $(MAKE) vmclean vmware
 qemu:	../test/b.img
-	qemu-system-i386 -boot order=a \
+	qemu-system-i386 -vga std -boot order=a \
 	 -drive file=../test/b.img,index=0,if=floppy,format=raw $(GDB)
 qemu-gdb: ../test/b.img
 	$(MAKE) GDB="-s -S" qemu &
