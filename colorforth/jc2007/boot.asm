@@ -199,8 +199,17 @@ relocate:  ;# move code from where DOS or BIOS put it, to where we want it
 ;# it would seem to be trivial, but in cases where the 64K span of source
 ;# and destination overlap, we overwrite this relocation code while it is
 ;# running, and crash. it happened.
-;# one way to avoid it is to move everything to end of 640K base RAM
+;#
+;# and always, regardless of where the code is executing, to safely move
+;# code from one location to another, you move "up" from the top and "down"
+;# from the bottom; i.e., to move 0x1000 bytes from 0x7c00 to 0x8000,
+;# start from 0x8bff to 0x8fff working down;
+;# and to move in the opposite direction, start from 0x8000 to 0x7c00 and
+;# work up.
+;#
+;# one way to avoid the crash is to move everything to end of 640K base RAM
 ;# and then move it back to its final destination.
+;#
 ;# but that is inefficient. so instead we just move the relocation code to
 ;# the stack, which should be out of the way.
     cmp  byte ptr bootmode + loadaddr, 0xfe ;# already in correct place?
@@ -219,7 +228,6 @@ relocate:  ;# move code from where DOS or BIOS put it, to where we want it
 ;# now we need to do a tricky jump from here to where the relocated code is,
 ;# otherwise we still run the risk of a code overwrite.
     mov  ax, offset (5f-start)
-    add  ax, bp ;# correct to actual offset from where BIOS loaded code
     push es
     push ax
     lret ;# "return" to following address, in the relocated segment
