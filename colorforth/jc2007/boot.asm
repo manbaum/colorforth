@@ -182,7 +182,7 @@ shownumber: ;# alternate entry point, preload DX register
     jnc  1f
     add  al, ('a' - '9' - 1)
 1:  add  al, ('9' + 1)
-    es: mov  [bx], al ;# assumes ES=0xb800, text mode 3 video RAM
+    mov  es:[bx], al ;# assumes ES=0xb800, text mode 3 video RAM
     shr  dx, 4 ;# next higher hex digit
     sub  bx, 2 ;# move to previous screen position
     loop 0b
