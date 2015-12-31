@@ -55,6 +55,27 @@ Programmer's notes:
 
 BUGS
 ----
-(none known active as of 2012-12-30)
+* 2012-12-30: running in dosbox goes to fullscreen but total black. stderr
+  shows:
+
+DOSBox version 0.74
+Copyright 2002-2010 DOSBox Team, published under GNU GPL.
+---
+CONFIG:Loading primary settings from config file /home/jcomeau/.dosbox/dosbox-0.74.conf
+MIXER:Got different values from SDL: freq 44100, blocksize 512
+ALSA:Can't subscribe to MIDI port (65:0) nor (17:0)
+MIDI:Opened device:none
+DOSBox switched to max cycles, because of the setting: cycles=auto. If the game runs too fast try a fixed cycles amount in DOSBox's options.
+Illegal write to 1e80000, CS:IP        8:    9edc
+Illegal write to 1e80001, CS:IP        8:    9edc
+Illegal write to 1e80002, CS:IP        8:    9edc
+Illegal write to 1e80003, CS:IP        8:    9edc
+Illegal write to 1e80004, CS:IP        8:    9edc
+Illegal write to 1e80005, CS:IP        8:    9edc
+Illegal write to 1e80006, CS:IP        8:    9edc
+Illegal write to 1e80007, CS:IP        8:    9edc
+...
+
+  I'm assuming these are the VESA video RAM addresses.
 
 John Comeau <jc@unternet.net>
