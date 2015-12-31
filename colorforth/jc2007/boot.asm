@@ -212,30 +212,37 @@ relocate:  ;# move code from where DOS or BIOS put it, to where we want it
 ;#
 ;# but that is inefficient. so instead we just move the relocation code to
 ;# the stack, which should be out of the way.
-    mov  cx, 0x10000 >> 1 ;# moving 64K in words
-    mov  si, -2 ;# assume move is from 0x7c00 to higher address
+    cmp  byte ptr bootmode + loadaddr, 0xfe ;# already in correct place?
+    jz   9f  ;# if so, skip the difficult stuff
+    mov  ax, (0xa0000 - 0x10000) >> 4 ;# segment address of relocation
+    mov  es, ax
     mov  eax, ebp ;# get source address
-    shr  eax, 4  ;# segment address, fits 16 bits now
-    mov  bx, loadaddr >> 4;# destination address
-    std  ;# moving from top down
-    cmp  ax, bx ;# was our assumption correct?
-    jb   1f ;# if so, continue
-    ;# else moving from bottom up
+    shr  eax, 4
+    mov  ds, eax
+    mov  cx, 0x10000 >> 1 ;# moving 64K in words
+    mov  si, 0xfffe
+    mov  di, si
+    push cx
+    std  ;# move words from 0xfffe to 0
+    rep  movsw
+;# now we need to do a tricky jump from here to where the relocated code is,
+;# otherwise we still run the risk of a code overwrite.
+    mov  ax, offset (5f-start)
+    push es
+    push ax
+    lret ;# "return" to following address, in the relocated segment
+5:  pop  cx
+    xor  si, si ;# now move from 0 
+    mov  di, si
+    push es ;# destination now becomes source
+    pop  ds
+    mov  ax, loadaddr >> 4
+    mov  es, ax
     cld
-    add  si, 2
-1:  mov  ds, ax
-    mov  es, bx
-    mov  di, si ;# destination and source indices the same
-    push 0x90c3  ;# push 'ret' and following nop
-    push 0xa5f3  ;# push 'rep movsw' onto the stack too
-    mov  ax, sp
-    call ax
-    cld  ;# make sure direction flag is cleared
-    xor  ax, ax ;# now all segments are 0
+    rep  movsw
+9:  xor  ax, ax ;# now all segments are 0
     mov  ds, ax
     mov  es, ax
-    pop  ax ;# clean two words off stack
-    pop  ax
     pop  ax ;# get return address, but we want to "ret" to its new address
     and  ax, 0xff ;# this routine must be called from first 256 bytes!
     add  ax, loadaddr
