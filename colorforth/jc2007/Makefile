@@ -54,9 +54,6 @@ JC2007 := $(shell if which cygpath >/dev/null; \
 	 else echo $(PWD); fi)
 BOCHS := /cygdrive/c/Program\ Files/Bochs-2.3
 VMWARE := /cygdrive/c/Program\ Files/VMWare/VMware\ Player
-BXSHARE := $(shell if which cygpath >/dev/null; \
-	 then cygpath -w $(BOCHS); \
-	 else dirname $$(which bochs); fi)
 TIMESTAMP := $(shell date +%Y-%m-%d-%H:%M:%S)
 DEBUGGING := 1
 CDBOOT := cfboot.iso
@@ -291,3 +288,18 @@ cdtest: $(CDBOOT)
 	-IMAGE=$< $(BOCHS)/bochs -q
 	sed -i 's/^\(ide0:0.fileName =\).*/\1 "$<"/' cf.vmx
 	$(VMWARE)/vmplayer.exe cf.vmx
+# win95 image from http://forum.xda-developers.com/showthread.php?t=1960870
+/tmp/win95/SDL/c.img: ~/downloads/WIN95\[YP-GS1\].rar
+	mkdir -p $$(dirname $(dir $@))
+	cd $$(dirname $(dir $@)) && unrar $<
+/tmp/win95/c_raw.img: /tmp/win95/SDL/c.img
+	@echo converting from qcow \(copy-on-write\) image to raw image
+	qemu-img convert -O raw $< $@
+	mkdir $(dir $@)/mnt
+	@echo fdisk shows disk image has 63 sector offset, so...
+	sudo mount -t vfat -o loop,offset=$$((63*512)) \
+	 $@ $(dir $@)/mnt
+	sudo cp -f color.com $(dir $@)/mnt/WINDOWS/DESKTOP/
+	sudo umount $(dir $@)/mnt
+bochs: win95.bxrc /tmp/win95/c_raw.img
+	$@ -q -f $<
