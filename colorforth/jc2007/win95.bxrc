@@ -1,3 +1,7 @@
+# this is for testing color.com in DOS 7. if on starting Bochs you can't
+# get F5 or F8 pressed in time, do an improper shutdown so you get the
+# selection menu on next startup, and select the DOS prompt. then cd to
+# windows\desktop and type `color` at the prompt.
 megs: 32
 vga: extension=vbe
 romimage: file=$BXSHARE/BIOS-bochs-latest
