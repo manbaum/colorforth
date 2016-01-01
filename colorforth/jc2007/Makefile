@@ -300,16 +300,21 @@ cdtest: $(CDBOOT)
 	sudo mount -t vfat -o loop,offset=$$((63*512)) \
 	 $@ $(dir $@)/mnt
 	sudo cp -f color.com $(dir $@)/mnt/WINDOWS/DESKTOP/
+	$(MAKE) dosboot
 	sudo umount $(dir $@)/mnt
+qemu-dos7: /tmp/win95/c_raw.img
+	@echo run \\windows\\desktop\\color from DOS prompt
+	qemu-system-i386 -vga std -boot order=c \
+	 -drive file=$<,index=0,if=ide,format=raw
+dosboot: /tmp/win95/mnt/MSDOS.SYS
+	sed -i 's/\(BootGUI=\)\(1\)/\10/' $<
 bochs: win95.bxrc /tmp/win95/c_raw.img
-	@echo starting Windows 95 under Bochs...
+	@echo starting DOS7 under Bochs...
 	@echo hit c\<enter\> at bochs prompt to start loading.
-	@echo F8 does not work to get startup menu, and F5 makes it crash.
-	@echo so do an improper shutdown by partial booting and ^C and q,
-	@echo and next time it will give you the menu.
-	@echo boot into DOS prompt and run windows\\desktop\\color from DOS.
-	@echo if you attempt to run it under Windows it will halt at 9492,
-	@echo the call to protected mode.
+	@echo boots into DOS prompt. run windows\\desktop\\color from DOS.
+	@echo you can start Windows 95 by typing WIN at prompt, but...
+	@echo if you attempt to run color.com under Windows it will
+	@echo halt at 9492, the call to protected mode.
 	@echo
 	@read -p ok\>
 	$@ -q -f $<
