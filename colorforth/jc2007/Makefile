@@ -302,4 +302,14 @@ cdtest: $(CDBOOT)
 	sudo cp -f color.com $(dir $@)/mnt/WINDOWS/DESKTOP/
 	sudo umount $(dir $@)/mnt
 bochs: win95.bxrc /tmp/win95/c_raw.img
+	@echo starting Windows 95 under Bochs...
+	@echo hit c\<enter\> at bochs prompt to start loading.
+	@echo F8 does not work to get startup menu, and F5 makes it crash.
+	@echo so do an improper shutdown by partial booting and ^C and q,
+	@echo and next time it will give you the menu.
+	@echo boot into DOS prompt and run windows\\desktop\\color from DOS.
+	@echo if you attempt to run it under Windows it will halt at 9492,
+	@echo the call to protected mode.
+	@echo
+	@read -p ok\>
 	$@ -q -f $<

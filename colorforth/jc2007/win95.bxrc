@@ -2,6 +2,8 @@
 # get F5 or F8 pressed in time, do an improper shutdown so you get the
 # selection menu on next startup, and select the DOS prompt. then cd to
 # windows\desktop and type `color` at the prompt.
+#
+# set megs to 32 for normal color.com, 1024 for newcode
 megs: 32
 vga: extension=vbe
 romimage: file=$BXSHARE/BIOS-bochs-latest
