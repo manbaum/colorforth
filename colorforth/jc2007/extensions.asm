@@ -1,3 +1,4 @@
+;# included by color.asm
 .intel_syntax noprefix
 .code32
 ;# extensions to colorForth better written in assembly language

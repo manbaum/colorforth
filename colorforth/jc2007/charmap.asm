@@ -1,3 +1,6 @@
+;# charmap.asm is used in Makefile to make chars.asm,
+;# in conjunction with character data dumped from original color.com
+
 ;# compile character map from data stored as "######.......###"
 ;# the above should compile to the two bytes 0xfc 0x07
 .macro CHR16X24 row

@@ -1,5 +1,6 @@
-.intel_syntax noprefix ;#generic graphics
-
+;# included by color.asm
+.intel_syntax noprefix
+;#generic graphics
 ;# VESA mode numbers and screen sizes,
 ;# from http://www.mat.univie.ac.at/~gerald/laptop/vesafb.txt
 ;#    | 640x480  800x600  1024x768 1280x1024

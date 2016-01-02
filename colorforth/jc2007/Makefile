@@ -79,7 +79,7 @@ endif
 	 --reduce-memory-overheads \
 	 -o $*.o $< 2>&1 | tee $*.log
 	objcopy $*.o -O binary $@
-newcode: color.asm newcode.dat appcode.dat
+newcode: color.asm newcode.dat apps.dat
 	rm -f color.com
 	$(MAKE) I_HAVE_AT_LEAST_1GB_RAM=1 color.com
 kbd:	color.asm
@@ -171,8 +171,6 @@ chars.asm: charmap.asm
 	cat $< > $@
 	./cf2text ../color.com | sed -n '/{block 12}/,/{block 18}/p' | \
 	 grep -v '{block [0-9]\+}' >> $@
-appcode.asm: macros.asm apps.asm
-	cat $+ > $@
 oldcolor.dat: ../color.com empty_block.dat
 	dd if=$< of=$@ bs=1024 skip=18
 	if [ "$$(expr $$(du $@ | awk '{print $$1}') % 2)" = "0" ]; then \
