@@ -21,11 +21,15 @@ Programmer's notes:
   FIRST do a 'dup' to save what's in EAX to the stack; then load EAX with
   whatever and return.
 
-* to make programs compatible with both 800x600 and 1024x768 video modes, use
-  the "vp", "hp", "iw", and "ih" constants now available in high-level Forth.
+* to make programs compatible with 640x480, 800x600, and 1024x768 video modes,
+  use constants "vp", "hp", "iw", and "ih" now available in high-level Forth.
 
 * to make programs compatible with the load offset, which in this version is
   no longer 0, use "off" (in 32-bit words) or "off 4 *" (in bytes).
+
+* running the color.com file from DOS only loads 64K, so blocks beyond that
+  will not be accessible. this means all the community code blocks unless
+  they are moved down into CM's reserved area.
 
 * when you see executable words in the sources other than 'macro', 'forth',
   'load', and the like, you may wonder what happens to what they put on the
@@ -55,27 +59,8 @@ Programmer's notes:
 
 BUGS
 ----
-* 2012-12-30: running in dosbox goes to fullscreen but total black. stderr
-  shows:
-
-DOSBox version 0.74
-Copyright 2002-2010 DOSBox Team, published under GNU GPL.
----
-CONFIG:Loading primary settings from config file /home/jcomeau/.dosbox/dosbox-0.74.conf
-MIXER:Got different values from SDL: freq 44100, blocksize 512
-ALSA:Can't subscribe to MIDI port (65:0) nor (17:0)
-MIDI:Opened device:none
-DOSBox switched to max cycles, because of the setting: cycles=auto. If the game runs too fast try a fixed cycles amount in DOSBox's options.
-Illegal write to 1e80000, CS:IP        8:    9edc
-Illegal write to 1e80001, CS:IP        8:    9edc
-Illegal write to 1e80002, CS:IP        8:    9edc
-Illegal write to 1e80003, CS:IP        8:    9edc
-Illegal write to 1e80004, CS:IP        8:    9edc
-Illegal write to 1e80005, CS:IP        8:    9edc
-Illegal write to 1e80006, CS:IP        8:    9edc
-Illegal write to 1e80007, CS:IP        8:    9edc
-...
-
-  I'm assuming these are the VESA video RAM addresses.
+* 2012-12-30: running in dosbox goes to fullscreen but total black. this is
+    not so much a bug in either software, but something (linear framebuffer)
+    that has not yet been implemented in dosbox.
 
 John Comeau <jc@unternet.net>
