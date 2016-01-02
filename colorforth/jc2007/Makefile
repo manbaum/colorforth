@@ -283,6 +283,7 @@ cdtest: $(CDBOOT)
 	@echo converting from qcow \(copy-on-write\) image to raw image
 	qemu-img convert -O raw $< $@
 	mkdir -p $(dir $@)/mnt
+	sudo modprobe loop
 	@echo fdisk shows disk image has 63 sector offset, so...
 	sudo mount -t vfat -o loop,offset=$$((63*512)) \
 	 $@ $(dir $@)/mnt
@@ -294,7 +295,7 @@ qemu-dos7: /tmp/win95/c_raw.img
 	qemu-system-i386 -vga std -boot order=c \
 	 -drive file=$<,index=0,if=ide,format=raw
 dosboot: /tmp/win95/mnt/MSDOS.SYS
-	sed -i 's/\(BootGUI=\)\(1\)/\10/' $<
+	sudo sed -i 's/\(BootGUI=\)\(1\)/\10/' $<
 bochs: win95.bxrc /tmp/win95/c_raw.img
 	@echo starting DOS7 under Bochs...
 	@echo hit c\<enter\> at bochs prompt to start loading.
