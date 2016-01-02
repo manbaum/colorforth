@@ -120,6 +120,7 @@ vmclean:
 clean: vmclean
 	rm -f *.o *.bin *.out *.dmp *.lst *.iso *.dat *.ima *.img *.pyc
 	rm -rf FDOEMCD
+	rm -f chars.asm
 	[ -d release ] && cd release && $(MAKE) clean || true
 errors:
 	$(GAS) color.asm 2>&1 | ./show_error_lines.sh
