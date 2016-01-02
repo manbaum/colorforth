@@ -65,7 +65,7 @@ LARGEST_CF := $(CF_SOURCE)/CFDOS4.BLK
 LOADBLOCKS := $(shell du $(LARGEST_CF) | awk {'print $$1'})
 VIRTUAL_SECTORS := $(shell expr $(LOADBLOCKS) \* 2)
 export
-default: color.com qemu
+default: small qemu
 color.com: $(sources) oldcolor.dat
 ifdef I_HAVE_AT_LEAST_1GB_RAM
 	$(MAKE) newcode.dat
@@ -84,9 +84,9 @@ newcode: color.asm newcode.dat appcode.dat
 	$(MAKE) I_HAVE_AT_LEAST_1GB_RAM=1 color.com
 kbd:	color.asm
 	rm -f color.com
-	$(MAKE) SMALLSCREEN=1 DEBUG_KBD=1 color.com
+	$(MAKE) SMALLSCREEN=1 VGASIZE=1 DEBUG_KBD=1 color.com
 small:	color.asm
-	$(MAKE) SMALLSCREEN=1 newcode
+	$(MAKE) SMALLSCREEN=1 VGASIZE=1 newcode
 cm2001: color.asm
 	rm -f color.com
 	$(MAKE) CM2001=1 color.com
@@ -150,7 +150,7 @@ bochs23: ../test/b.img
 vmware: ../test/b.img
 	cd ../test && $(MAKE) vmclean vmware
 qemu:	../test/b.img
-	qemu-system-i386 -vga std -boot order=a \
+	qemu-system-i386 -vga std -boot order=a -m 1G \
 	 -drive file=../test/b.img,index=0,if=floppy,format=raw $(GDB)
 qemu-gdb: ../test/b.img
 	$(MAKE) GDB="-s -S" qemu &
@@ -282,7 +282,7 @@ cdtest: $(CDBOOT)
 /tmp/win95/c_raw.img: /tmp/win95/SDL/c.img
 	@echo converting from qcow \(copy-on-write\) image to raw image
 	qemu-img convert -O raw $< $@
-	mkdir $(dir $@)/mnt
+	mkdir -p $(dir $@)/mnt
 	@echo fdisk shows disk image has 63 sector offset, so...
 	sudo mount -t vfat -o loop,offset=$$((63*512)) \
 	 $@ $(dir $@)/mnt
