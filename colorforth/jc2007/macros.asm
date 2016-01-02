@@ -161,7 +161,8 @@
  .endif
 .endm
 
-/* test cases */
+/* test cases
 BLOCK 19
 FORTH "jul31", "colored", "keypad", "number"
 BLOCK
+*/

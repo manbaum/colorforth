@@ -66,7 +66,7 @@ LOADBLOCKS := $(shell du $(LARGEST_CF) | awk {'print $$1'})
 VIRTUAL_SECTORS := $(shell expr $(LOADBLOCKS) \* 2)
 export
 default: small qemu
-color.com: $(sources) oldcolor.dat
+color.com: $(sources) oldcolor.dat chars.asm
 ifdef I_HAVE_AT_LEAST_1GB_RAM
 	$(MAKE) newcode.dat
 endif

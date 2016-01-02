@@ -1711,7 +1711,7 @@ forth2:
 ;# finally load in compiled high-level code
 .ifdef I_HAVE_AT_LEAST_1GB_RAM
  .incbin "newcode.dat" ;# blocks 18-63 are CM's code
- .incbin "appcode.dat" ;# blocks 64+ for colorForth community applications
+ .incbin "apps.dat" ;# blocks 64+ for colorForth community applications
 .else
  .incbin "oldcolor.dat" ;# some things including "icons" won't work with this
 .endif

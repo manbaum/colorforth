@@ -1,3 +1,4 @@
+.include "macros.asm"
 BLOCK # should be 64
 FORTH [TEXTALLCAPS], ans, [TEXT], core
 FORTH abs, [TEXT], n-n, 0, or, -if, negate, then, ";"
