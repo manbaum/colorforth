@@ -104,10 +104,18 @@
 ;#        0 BIOS interrupt table
 .equ cell, 4  ;# bytes per word
 .equ blocksize, 1024  ;# bytes per Forth block
+;# 5:6:5 video modes for various screen sizes
+;# bit 14 (0x4000) sets linear address mode
 .ifdef SMALLSCREEN
- .equ hp, 800 ;# 1024 or 800
- .equ vp, 600 ;# 768 or 600
- .equ vesa, 0x4114 ;# bit 12 sets linear address mode in 0x117 or 0x114
+ .ifdef VGASIZE
+  .equ hp, 640
+  .equ vp, 480
+  .equ vesa, 0x4111
+ .else
+  .equ hp, 800
+  .equ vp, 600
+  .equ vesa, 0x4114
+ .endif
 .else
  .equ hp, 1024
  .equ vp, 768
