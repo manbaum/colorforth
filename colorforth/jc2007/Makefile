@@ -65,7 +65,7 @@ LARGEST_CF := $(CF_SOURCE)/CFDOS4.BLK
 LOADBLOCKS := $(shell du $(LARGEST_CF) | awk {'print $$1'})
 VIRTUAL_SECTORS := $(shell expr $(LOADBLOCKS) \* 2)
 export
-default: small bochs23
+default: color.com qemu
 color.com: $(sources) oldcolor.dat
 ifdef I_HAVE_AT_LEAST_1GB_RAM
 	$(MAKE) newcode.dat
@@ -173,19 +173,6 @@ chars.asm: charmap.asm
 	 grep -v '{block [0-9]\+}' >> $@
 appcode.asm: forth.asm apps.asm
 	cat $+ > $@
-newcode.asm:  # it is now in repository, don't make
-	cat $< > $@
-	./cf2text ../color.com | sed -n '/{block 18}/,$$p' | \
-	 sed \
-	 -e 's/\(.*\)/\L\1/' \
-	 -e 's/\(\[\w*\]\)/\U\1/g' \
-	 -e 's/{\(block [0-9]\+\)}/\U\1/' \
-	 -e '/^[^B]/ s/\(\S\+\)/"\1",/g' \
-	 -e 's/^\([^B]\)/FORTH \1/' \
-	 -e 's/,\s*$$//' \
-	 >> $@
-	echo BLOCK >> $@
-	echo BLOCK >> $@  # pad out one more block for even number
 oldcolor.dat: ../color.com empty_block.dat
 	dd if=$< of=$@ bs=1024 skip=18
 	if [ "$$(expr $$(du $@ | awk '{print $$1}') % 2)" = "0" ]; then \
@@ -267,7 +254,7 @@ exclude: color.dat
 cfboot.iso: boot.asm color.asm Makefile
 	$(MAKE) EL_TORITO_BOOT=1 newcode vmclean ../test/b.img exclude
 	cp -f ../test/b.img boot.img
-	mkisofs -b boot.img \
+	genisoimage -b boot.img \
 	 -c boot.catalog \
 	 -no-emul-boot \
 	 -boot-load-seg=0x940 \
@@ -279,7 +266,7 @@ win98.iso: $(WIN98)
 	mkdir -p cdboot
 	cp $< boot.img
 	echo 'test' > cdboot/README
-	mkisofs -b boot.img -c boot.catalog -o $@ cdboot
+	genisoimage -b boot.img -c boot.catalog -o $@ cdboot
 cfisotest: cfboot.iso bochsrc
 	IMAGE=$< $(BOCHS)/bochs -q
 cdtest: $(CDBOOT)
@@ -318,3 +305,6 @@ bochs: win95.bxrc /tmp/win95/c_raw.img
 	@echo
 	@read -p ok\>
 	$@ -q -f $<
+/boot/cfjc1024x768.img:  # for memdisk
+	$(MAKE) clean newcode ../test/b.img
+	sudo cp ../test/b.img $@
