@@ -171,7 +171,7 @@ chars.asm: charmap.asm
 	cat $< > $@
 	./cf2text ../color.com | sed -n '/{block 12}/,/{block 18}/p' | \
 	 grep -v '{block [0-9]\+}' >> $@
-appcode.asm: forth.asm apps.asm
+appcode.asm: macros.asm apps.asm
 	cat $+ > $@
 oldcolor.dat: ../color.com empty_block.dat
 	dd if=$< of=$@ bs=1024 skip=18
@@ -182,7 +182,7 @@ oldcolor.dat: ../color.com empty_block.dat
 	cf2ansi $< > $@
 mandelbrot.blk: /usr/src/howerd/MarkSlicker/accept.blk
 	dd if=$< of=$@ bs=1024 skip=64 count=4
-%.dsm:	%.blk forth.asm
+%.dsm:	%.blk macros.asm
 	cat $(word 2, $+) > $@
 	./cf2text -h $< | sed \
 	 -e 's/\(.*\)/\L\1/' \
