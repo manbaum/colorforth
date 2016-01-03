@@ -252,7 +252,7 @@ exclude: color.dat
 	find . -maxdepth 1 -type f -name '*.nvram' >> $@.lst
 	find . -maxdepth 1 -type f -name '*vm*' >> $@.lst
 cfboot.iso: boot.asm color.asm Makefile
-	$(MAKE) EL_TORITO_BOOT=1 newcode vmclean ../test/b.img exclude
+	$(MAKE) EL_TORITO_BOOT=1 small vmclean ../test/b.img exclude
 	cp -f ../test/b.img boot.img
 	genisoimage -b boot.img \
 	 -c boot.catalog \
