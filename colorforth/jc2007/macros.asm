@@ -79,8 +79,9 @@
    .long typetag, 0x\word
   .elseif typetag == 6 || typetag == 8
    .long typetag | (\word << 5)
+  ;# COMPILESHORTHEX and EXECUTESHORTHEX
   .elseif typetag == (6 + 16) || typetag == (8 + 16)
-   .long typetag | (0x\word << 5)
+   .long typetag | ((0x\word & 0x7ffffff) << 5)
   .elseif typetag == 25  ;# SKIP
    .fill \word, 4, 0
   .elseif typetag == 26  ;# BINARY

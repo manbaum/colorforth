@@ -295,7 +295,9 @@ qemu-dos7: /tmp/win95/c_raw.img
 	 -drive file=$<,index=0,if=ide,format=raw
 dosboot: /tmp/win95/mnt/MSDOS.SYS
 	sudo sed -i 's/\(BootGUI=\)\(1\)/\10/' $<
-bochs: win95.bxrc /tmp/win95/c_raw.img
+cfbochs: cf.bxrc ../test/b.img
+	bochs -q -f $<
+win95bochs: win95.bxrc /tmp/win95/c_raw.img
 	@echo starting DOS7 under Bochs...
 	@echo hit c\<enter\> at bochs prompt to start loading.
 	@echo boots into DOS prompt. run windows\\desktop\\color from DOS.
@@ -304,7 +306,7 @@ bochs: win95.bxrc /tmp/win95/c_raw.img
 	@echo halt at 9492, the call to protected mode.
 	@echo
 	@read -p ok\>
-	$@ -q -f $<
+	bochs -q -f $<
 /boot/cfjc1024x768.img:  # for memdisk
 	$(MAKE) clean newcode ../test/b.img
 	sudo cp ../test/b.img $@
