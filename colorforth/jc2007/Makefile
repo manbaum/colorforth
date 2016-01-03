@@ -52,8 +52,8 @@ COLINUX := /cygdrive/c/Program\ Files/coLinux
 JC2007 := $(shell if which cygpath >/dev/null; \
 	 then cygpath -w $(PWD); \
 	 else echo $(PWD); fi)
-BOCHS := /cygdrive/c/Program\ Files/Bochs-2.3
-VMWARE := /cygdrive/c/Program\ Files/VMWare/VMware\ Player
+BOCHS := /usr/bin
+VMWARE := /usr/bin
 TIMESTAMP := $(shell date +%Y-%m-%d-%H:%M:%S)
 DEBUGGING := 1
 CDBOOT := cfboot.iso
@@ -236,7 +236,7 @@ freedos.iso: ~/shared_documents/FDOEMCD.builder.zip \
 	mv FDOEMCD/FDOEM.ISO $@
 isotest: freedos.iso bochsrc cf.vmx
 	sed -i 's/^\(ide0:0.fileName = \).*/\1 "$<"/' cf.vmx
-	$(VMWARE)/vmplayer.exe cf.vmx
+	$(VMWARE)/vmplayer cf.vmx
 	#IMAGE=$< $(BOCHS)/bochs -q
 exclude: color.dat
 	find . -maxdepth 1 -type d > $@.lst
@@ -271,9 +271,9 @@ cfisotest: cfboot.iso bochsrc
 cdtest: $(CDBOOT)
 	if [ -z "$(CDBOOT)" ]; then \
 	 echo must define CDBOOT=cfboot.iso >&2; false; fi
-	-IMAGE=$< $(BOCHS)/bochs -q
+	#-IMAGE=$< $(BOCHS)/bochs -q
 	sed -i 's/^\(ide0:0.fileName =\).*/\1 "$<"/' cf.vmx
-	$(VMWARE)/vmplayer.exe cf.vmx
+	$(VMWARE)/vmplayer cf.vmx
 # win95 image from http://forum.xda-developers.com/showthread.php?t=1960870
 /tmp/win95/SDL/c.img: ~/downloads/WIN95\[YP-GS1\].rar
 	mkdir -p $$(dirname $(dir $@))
