@@ -1,4 +1,5 @@
 SHELL := /bin/bash
+TEMP ?= ~/tmp
 sources := $(wildcard *.asm)
 ftpfiles := $(foreach file, $(sources), \
  $(shell echo $(notdir $(file)) | tr 'a-z' 'A-Z'))
