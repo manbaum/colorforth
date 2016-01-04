@@ -1,0 +1,15 @@
+# for testing if known good ISO image boots under Bochs
+#
+# set megs to 32 for normal color.com, 1024 for newcode
+megs: 1024
+vga: extension=vbe
+romimage: file=$BXSHARE/BIOS-bochs-latest
+vgaromimage: file=$BXSHARE/VGABIOS-lgpl-latest
+cpu: count=1, ips=100000000, reset_on_triple_fault=1
+boot: cdrom
+ata0-master:  type=cdrom, path=/home/jcomeau/downloads/dsl-4.11.rc2.iso, status=inserted
+info: action=report
+#debug: action=report
+log: /tmp/bochs-dsl.log
+mouse: enabled=1
+#vga_update_interval: 150000
