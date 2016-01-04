@@ -255,9 +255,9 @@ cfboot.iso: boot.asm color.asm Makefile
 	cp -f ../test/b.img boot.img
 	genisoimage -b boot.img \
 	 -c boot.catalog \
-	 -no-emul-boot \
 	 -boot-load-seg=0x940 \
 	 -boot-load-size=$(VIRTUAL_SECTORS) \
+	 -no-emul-boot \
 	 --exclude-list=exclude.lst \
 	 -o $@ \
 	 .
