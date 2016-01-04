@@ -254,6 +254,8 @@ cfboot.iso: boot.asm color.asm Makefile
 	$(MAKE) EL_TORITO_BOOT=1 small vmclean ../test/b.img exclude
 	cp -f ../test/b.img boot.img
 	genisoimage -b boot.img \
+	 -A 'colorforth/jc2007' \
+	 -input-charset UTF-8 \
 	 -c boot.catalog \
 	 -boot-load-seg=0x940 \
 	 -boot-load-size=$(VIRTUAL_SECTORS) \
@@ -312,3 +314,9 @@ win95bochs: win95.bxrc /tmp/win95/c_raw.img
 	sudo cp ../test/b.img $@
 qemu-iso: cfboot.iso
 	qemu-system-i386 -boot d -cdrom $< -m 1024
+check-iso: cfboot.iso /mnt/knoppix
+	sudo mount -o loop $+
+check-dsl: ~/downloads/dsl-4.11.rc2.iso /mnt/knoppix
+	sudo mount -o loop $+
+umount: /mnt/knoppix
+	sudo umount $<
