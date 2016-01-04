@@ -6,10 +6,10 @@ vga: extension=vbe
 romimage: file=$BXSHARE/BIOS-bochs-latest
 vgaromimage: file=$BXSHARE/VGABIOS-lgpl-latest
 cpu: count=1, ips=100000000, reset_on_triple_fault=1
-boot: floppy
-floppya: 1_44="../test/b.img", status=inserted
-#info: action=report
-#debug: action=report
-log: /tmp/bochs-cf.log
+boot: cdrom
+ata0-master:  type=cdrom, path=cfboot.iso, status=inserted
+info: action=report
+debug: action=report
+log: /tmp/bochs-cfiso.log
 mouse: enabled=0
 vga_update_interval: 150000

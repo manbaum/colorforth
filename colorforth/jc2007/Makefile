@@ -238,7 +238,6 @@ freedos.iso: ~/shared_documents/FDOEMCD.builder.zip \
 isotest: freedos.iso bochsrc cf.vmx
 	sed -i 's/^\(ide0:0.fileName = \).*/\1 "$<"/' cf.vmx
 	$(VMWARE)/vmplayer cf.vmx
-	#IMAGE=$< $(BOCHS)/bochs -q
 exclude: color.dat
 	find . -maxdepth 1 -type d > $@.lst
 	find . -mindepth 2 >> $@.lst
@@ -267,8 +266,8 @@ win98.iso: $(WIN98)
 	cp $< boot.img
 	echo 'test' > cdboot/README
 	genisoimage -b boot.img -c boot.catalog -o $@ cdboot
-cfisotest: cfboot.iso bochsrc
-	IMAGE=$< $(BOCHS)/bochs -q
+cfisotest: cfboot.iso cfiso.bxrc
+	$(BOCHS)/bochs -q -f $(word 2, $+)
 cdtest: $(CDBOOT)
 	if [ -z "$(CDBOOT)" ]; then \
 	 echo must define CDBOOT=cfboot.iso >&2; false; fi
@@ -311,3 +310,5 @@ win95bochs: win95.bxrc /tmp/win95/c_raw.img
 /boot/cfjc1024x768.img:  # for memdisk
 	$(MAKE) clean newcode ../test/b.img
 	sudo cp ../test/b.img $@
+qemu-iso: cfboot.iso
+	qemu-system-i386 -boot d -cdrom $< -m 1024
