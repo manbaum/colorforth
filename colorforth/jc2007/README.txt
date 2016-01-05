@@ -57,9 +57,14 @@ Programmer's notes:
 * inserting a 'hlt' into bootcode will enable you to see if VMWare reached it,
   'grep halt ../test/vmware.log'
 
+UPDATE
+------
+* see http://unternet.net/src, especially src/clusterFix, for some experiments
+  with ColorForth2, ArrayForth, including being able to boot from a USB drive.
+
 BUGS
 ----
-* 2012-12-30: running in dosbox goes to fullscreen but total black. this is
+* 2015-12-30: running in dosbox goes to fullscreen but total black. this is
     not so much a bug in either software, but something (linear framebuffer)
     that has not yet been implemented in dosbox.
 

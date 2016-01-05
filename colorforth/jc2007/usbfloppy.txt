@@ -1,0 +1,12 @@
+repartitioned 4gb sdram:
+
+Disk /dev/sdc: 3.7 GiB, 3963617280 bytes, 7741440 sectors
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disklabel type: dos
+Disk identifier: 0x00000000
+
+Device     Boot Start     End Sectors  Size Id Type
+/dev/sdc1        2048    4095    2048    1M cf unknown
+/dev/sdc2        4096 7741439 7737344  3.7G  c W95 FAT32 (LBA)
