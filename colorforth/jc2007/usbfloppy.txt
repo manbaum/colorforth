@@ -10,3 +10,16 @@ Disk identifier: 0x00000000
 Device     Boot Start     End Sectors  Size Id Type
 /dev/sdc1        2048    4095    2048    1M cf unknown
 /dev/sdc2        4096 7741439 7737344  3.7G  c W95 FAT32 (LBA)
+
+this of course is USB-HDD, and I wanted a boot floppy. so I overwrote the
+MBR and the rest of the first 1.44M of the 4GB SDRAM with ../test/b.img.
+
+root@aspire:~# file -s /dev/sdc
+/dev/sdc: DOS floppy 1440k, DOS/MBR hard disk boot sector
+
+that still was recognized by the BIOS as USB-HDD. so then I downloaded
+fdboot.img from freedos.org and overwrote the MBR yet again. this time:
+
+
+t@aspire:~# file -s /dev/sdc
+/dev/sdc: DOS/MBR boot sector, code offset 0x3c+2, OEM-ID "LINUX4.1", root entries 224, sectors 2880 (volumes <=32 MB) , sectors/FAT 9, sectors/track 18, serial number 0x44fa7fe3, label: "           ", FAT (12 bit), followed by FAT
