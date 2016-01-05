@@ -320,3 +320,7 @@ check-dsl: ~/downloads/dsl-4.11.rc2.iso /mnt/knoppix
 	sudo mount -o loop $+
 umount: /mnt/knoppix
 	sudo umount $<
+%.bin: %.xxd
+	xxd -r $< $@
+%.xxd: %.bin
+	xxd $< $@

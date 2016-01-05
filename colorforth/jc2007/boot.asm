@@ -42,11 +42,11 @@ bps:
     .word 512     ;# bytes/sector
     .byte 1       ;# sector/cluster
     .word 1       ;# sector reserved
-    .byte 2       ;# fats
-    .word 16*14   ;# root directory entries
+    .byte 0       ;# fats
+    .word 0       ;# root directory entries
     .word 80 * HEADS * SECTORS_PER_TRACK ;# sectors
-    .byte 0x0f0   ;# media
-    .word 9       ;# sectors/fat
+    .byte 0xf0    ;# media
+    .word 0       ;# sectors/fat
 spt:
     .word SECTORS_PER_TRACK ;# sectors/track
 heads:
