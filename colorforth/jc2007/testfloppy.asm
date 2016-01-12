@@ -20,6 +20,7 @@ bps:
     .word 80 * HEADS * SECTORS_PER_TRACK ;# sectors
     .byte 0xf0      ;# media
     .word 0         ;# sectors/fat
+/*
 ;# start of DOS 3.31 BPB, offset 0x18
 spt:
     .word SECTORS_PER_TRACK ;# sectors/track
@@ -40,6 +41,7 @@ heads:
 ;# datetime.datetime(2006, 9, 3, 0, 10, 27)
     .ascii "           " ;# volume label
     .ascii "FAT12   " ;# filesystem type
+*/
 start:
     mov ax, 0x0e00  ;# show character
     mov bx, 3       ;# bh=page 0; bl=color or attribute
