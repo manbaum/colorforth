@@ -26,7 +26,7 @@ spt:
 heads:
     .word HEADS     ;# heads
     .long 0         ;# hidden sectors
-    .long 2880      ;# total sectors
+    .long 0         ;# total sectors
 ;# start of DOS 4.0 EBPB, offset 0x24
     .byte 0         ;# physical drive number
     .byte 0         ;# flags etc.
@@ -39,7 +39,7 @@ heads:
 ;# >>> datetime.datetime.fromtimestamp(1157267427)
 ;# datetime.datetime(2006, 9, 3, 0, 10, 27)
     .ascii "           " ;# volume label
-    .ascii "        " ;# filesystem type
+    .ascii "FAT12   " ;# filesystem type
 start:
     mov ax, 0x0e00  ;# show character
     mov bx, 3       ;# bh=page 0; bl=color or attribute
