@@ -20,14 +20,14 @@ bps:
     .word 80 * HEADS * SECTORS_PER_TRACK ;# sectors
     .byte 0xf0      ;# media
     .word 0         ;# sectors/fat
-/*
 ;# start of DOS 3.31 BPB, offset 0x18
 spt:
     .word SECTORS_PER_TRACK ;# sectors/track
 heads:
     .word HEADS     ;# heads
     .long 0         ;# hidden sectors
-    .long 0         ;# total sectors
+    .long 2880      ;# total sectors
+/*
 ;# start of DOS 4.0 EBPB, offset 0x24
     .byte 0         ;# physical drive number
     .byte 0         ;# flags etc.
