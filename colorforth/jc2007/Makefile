@@ -335,8 +335,14 @@ bootfloppy: ~/Downloads/fdboot.img
 	dd if=$< of=/dev/sdb
 %.dsm: %.mbr
 	objdump --target binary \
-	 --architecture i386 \
+	 --architecture i8086 \
 	 --disassemble-all \
-	 --no-show-raw-insn \
 	 --disassembler-options=intel \
 	 $< > $@
+%.dsm:
+	echo $* | xxd -r -p > /tmp/$*.tmp
+	objdump --target binary \
+	 --architecture i8086 \
+	 --disassemble-all \
+	 --disassembler-options=intel \
+	 /tmp/$*.tmp
