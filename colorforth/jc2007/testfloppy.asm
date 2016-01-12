@@ -48,6 +48,6 @@ start:
     int 0x10        ;# BIOS function to show character in al
     inc al          ;# next character
     jmp start       ;# loop forever
-    .org 0xfe
+    .org 0x1fe
     .byte 0x55, 0xaa ;# boot signature
 ;# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

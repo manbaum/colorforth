@@ -326,10 +326,10 @@ umount: /mnt/knoppix
 	xxd $< $@
 isfloppy: /dev/sdb
 	sudo file -s $<
-testboot: fdboot.mbr.xxd /dev/sdb
+testboot: testfloppy.dat /dev/sdb
 	# write a bare bootsector to USB key to see if BIOS recognizes as FDD
 	sudo dd if=/dev/zero of=$(word 2, $+) bs=1024 count=1440
-	sudo xxd -r $< $(word 2, $+)
+	sudo dd if=$< of=$(word 2, $+)
 bootfloppy: ~/Downloads/fdboot.img
 	# write a known-good bootable image to floppy
 	dd if=$< of=/dev/sdb
