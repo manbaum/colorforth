@@ -15,11 +15,11 @@ bps:
     .word 512       ;# bytes/sector
     .byte 1         ;# sector/cluster
     .word 1         ;# sector reserved
-    .byte 2         ;# fats
-    .word 224       ;# root directory entries
+    .byte 0         ;# fats
+    .word 0         ;# root directory entries
     .word 80 * HEADS * SECTORS_PER_TRACK ;# sectors
     .byte 0xf0      ;# media
-    .word 9         ;# sectors/fat
+    .word 0         ;# sectors/fat
 ;# start of DOS 3.31 BPB, offset 0x18
 spt:
     .word SECTORS_PER_TRACK ;# sectors/track
@@ -42,10 +42,12 @@ heads:
     .ascii "FAT12   " ;# filesystem type
 start:
     mov ax, 0x0e00  ;# show character
-    mov bx, 7       ;# bh=0, page 0; bl=7, white on black
+    mov bx, 3       ;# bh=page 0; bl=color or attribute
     push ax
     push bx
     int 0x10        ;# BIOS function to show character in al
+    pop bx
+    pop ax
     inc al          ;# next character
     jmp start       ;# loop forever
     .org 0x1fe
