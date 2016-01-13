@@ -1,3 +1,4 @@
+USBKEY ?= /dev/sdb  # could be sdc or sdd! be careful!
 SHELL := /bin/bash
 TEMP ?= ~/tmp
 sources := $(wildcard *.asm)
@@ -324,15 +325,33 @@ umount: /mnt/knoppix
 	xxd -r $< $@
 %.xxd: %.bin
 	xxd $< $@
-isfloppy: /dev/sdb
+isfloppy: $(USBKEY)
 	sudo file -s $<
-testboot: testfloppy.dat /dev/sdb
+testboot.a: testfloppy.dat $(USBKEY)
 	# write a bare bootsector to USB key to see if BIOS recognizes as FDD
 	sudo dd if=/dev/zero of=$(word 2, $+) bs=1024 count=1440
 	sudo dd if=$< of=$(word 2, $+)
+testboot.img: testfloppy.dat
+	sudo dd if=/dev/zero of=$@ bs=1024 count=1440
+	sudo dd if=$< of=$@ conv=notrunc
+%.qemu: %.img
+	sudo qemu-system-i386 -vga std -boot order=b -m 1G \
+	 -drive file=$<,index=1,if=floppy,format=raw
+testboot.iso: testboot.img
+	genisoimage -b $< \
+	 -A 'colorforth/jc2007' \
+	 -input-charset UTF-8 \
+	 -c boot.catalog \
+	 -boot-load-seg=0x940 \
+	 -boot-load-size=$(VIRTUAL_SECTORS) \
+	 -no-emul-boot \
+	 -o $@ \
+	 .
+%.d: %.iso
+	sudo dd if=$< of=$(USBKEY)
 bootfloppy: ~/Downloads/fdboot.img
 	# write a known-good bootable image to floppy
-	dd if=$< of=/dev/sdb
+	dd if=$< of=$(USBKEY)
 %.dsm: %.mbr
 	objdump --target binary \
 	 --architecture i8086 \
