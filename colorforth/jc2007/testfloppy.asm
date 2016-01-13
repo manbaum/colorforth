@@ -30,19 +30,13 @@ heads:
 ;# start of DOS 4.0 EBPB, offset 0x24
     .byte 0         ;# physical drive number
     .byte 0         ;# flags etc.
-    .byte 0x29      ;# extended boot signature, 0x29=4.1
-    .long 0x44fa7fe3 ;# volume serial number
-;# the above serial number is probably freedos's timestamp:
-;# $ printf '%d\n' 0x44fa7fe3
-;# 1157267427
-;# $ python
-;# >>> datetime.datetime.fromtimestamp(1157267427)
-;# datetime.datetime(2006, 9, 3, 0, 10, 27)
+    .byte 0x28      ;# extended boot signature, 0x28=4.0
+    .long 0x0       ;# volume serial number
     .ascii "           " ;# volume label
     .ascii "FAT12   " ;# filesystem type <-*** ALSO MUST BE HERE
 start:
     mov ax, 0x0e00  ;# show character
-    mov bx, 3       ;# bh=page 0; bl=color or attribute
+    xor bx, bx      ;# bh=page 0; bl=color or attribute
     push ax
     push bx
     int 0x10        ;# BIOS function to show character in al
@@ -50,6 +44,7 @@ start:
     pop ax
     inc al          ;# next character
     jmp start       ;# loop forever
+;# ctrl-alt-del will reboot, since interrupts are enabled
     .org 0x1fe
     .byte 0x55, 0xaa ;# boot signature
 ;# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
