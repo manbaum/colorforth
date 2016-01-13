@@ -28,6 +28,7 @@ heads:
     .long 0         ;# hidden sectors
     .long 2880      ;# total sectors, can be zero
 ;# start of DOS 4.0 EBPB, offset 0x24
+drive:
     .byte 0         ;# physical drive number
     .byte 0         ;# flags etc.
     .byte 0x28      ;# extended boot signature, 0x28=4.0
@@ -35,15 +36,12 @@ heads:
     .ascii "           " ;# volume label
     .ascii "FAT12   " ;# filesystem type <-*** ALSO MUST BE HERE
 start:
-    mov ax, 0x0e00  ;# show character
+    mov ah, 0x0e    ;# show character
+    mov al, dl      ;# get drive number
+    or al, 'A'      ;# change to drive letter
     xor bx, bx      ;# bh=page 0; bl=color or attribute
-    push ax
-    push bx
     int 0x10        ;# BIOS function to show character in al
-    pop bx
-    pop ax
-    inc al          ;# next character
-    jmp start       ;# loop forever
+    hlt
 ;# ctrl-alt-del will reboot, since interrupts are enabled
     .org 0x1fe
     .byte 0x55, 0xaa ;# boot signature
