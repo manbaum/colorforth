@@ -1,70 +1,78 @@
-
-fdboot.mbr:     file format binary
-
-
-Disassembly of section .data:
-
-00000000 <.data>:
-   0:	jmp    0x3e
-   2:	nop
-   3:	dec    sp
-   4:	dec    cx
-   5:	dec    si
-   6:	push   bp
-   7:	pop    ax
-   8:	xor    al,0x2e
-   a:	xor    WORD PTR [bx+si],ax
-   c:	add    al,BYTE PTR [bx+di]
-   e:	add    WORD PTR [bx+si],ax
-  10:	add    ah,al
-  12:	add    BYTE PTR [bx+si+0xb],al
-  15:	lock or WORD PTR [bx+si],ax
-  18:	adc    al,BYTE PTR [bx+si]
-  1a:	add    al,BYTE PTR [bx+si]
-	...
-  24:	add    BYTE PTR [bx+si],al
-  26:	sub    bx,sp
-  28:	jg     0x24
-  2a:	inc    sp
-  2b:	and    BYTE PTR [bx+si],ah
-  2d:	and    BYTE PTR [bx+si],ah
-  2f:	and    BYTE PTR [bx+si],ah
-  31:	and    BYTE PTR [bx+si],ah
-  33:	and    BYTE PTR [bx+si],ah
-  35:	and    BYTE PTR [bp+0x41],al
-  38:	push   sp
-  39:	xor    WORD PTR [bp+si],si
-  3b:	and    BYTE PTR [bx+si],ah
-  3d:	and    dl,bh
-  3f:	cld    
-  40:	xor    ax,ax
-  42:	mov    ds,ax
-  44:	mov    bp,0x7c00
-  47:	mov    ax,0x1fe0
-  4a:	mov    es,ax
-  4c:	mov    si,bp
-  4e:	mov    di,bp
-  50:	mov    cx,0x100
-  53:	rep movs WORD PTR es:[di],WORD PTR ds:[si]
-  55:	jmp    0x1fe0:0x7c5e
-  5a:	add    BYTE PTR [bx+si],al
-  5c:	pusha  
-  5d:	add    BYTE PTR [bp-0x7128],cl
-  61:	ror    BYTE PTR [di-0x5f9a],1
-  65:	sti    
-  66:	cmp    BYTE PTR [bp+0x24],0xff
-  6a:	jne    0x6f
-  6c:	mov    BYTE PTR [bp+0x24],dl
-  6f:	mov    WORD PTR [bp-0x40],0x10
-  74:	mov    WORD PTR [bp-0x3e],0x1
-  79:	call   0x165
-  7c:	inc    si
-  7d:	jb     0xe4
-  7f:	gs inc sp
-  81:	dec    di
-  82:	push   bx
-  83:	add    BYTE PTR [bp+di+0x1c76],cl
-  87:	mov    di,WORD PTR [bp+0x1e]
+;# freedos bootblock disassembly
+.intel_syntax noprefix ;# floppy boot segment
+.code16
+.org 0
+.equ HEADS, 2
+.equ SECTORS_PER_TRACK, 18
+boot:
+jmp	start
+    nop ;# <-*** THIS NEEDS TO BE HERE TO BE RECOGNIZED AS FLOPPY BY BIOS
+    .org 0x3 ;# just insurance
+    .ascii "cmcf 1.0"
+;# start DOS 2.0 BPB, offset 0xb
+bps:
+    .word 512       ;# bytes/sector
+    .byte 1         ;# sector/cluster
+    .word 1         ;# sector reserved
+    .byte 2         ;# fats, normally 2, can be 0
+    .word 224       ;# root directory entries
+    .word 80 * HEADS * SECTORS_PER_TRACK ;# sectors
+    .byte 0xf0      ;# media
+    .word SECTORS_PER_TRACK / 2 ;# sectors/fat, normally 9, can be 0
+;# start of DOS 3.31 BPB, offset 0x18
+spt:
+    .word SECTORS_PER_TRACK ;# sectors/track
+heads:
+    .word HEADS     ;# heads
+    .long 0         ;# hidden sectors
+    .long 2880      ;# total sectors, can be zero
+;# start of DOS 4.0 EBPB, offset 0x24
+    .byte 0         ;# physical drive number
+    .byte 0         ;# flags etc.
+    .byte 0x29      ;# extended boot signature, 0x29=4.1 (?)
+    .long 0x44fa7fe3 ;# volume serial number
+;# the above serial number is probably freedos's timestamp:
+;# $ printf '%d\n' 0x44fa7fe3
+;# 1157267427
+;# $ python
+;# >>> datetime.datetime.fromtimestamp(1157267427)
+;# datetime.datetime(2006, 9, 3, 0, 10, 27)
+    .ascii "           " ;# volume label
+    .ascii "FAT12   " ;# filesystem type <-*** ALSO MUST BE HERE
+start:
+    cli ;# no interrupts during relocation
+    cld ;# make sure we're moving down-to-up
+    xor ax, ax
+    mov ds, ax
+    mov bp, 0x7c00 ;# from 0:7c00
+    mov ax,0x1fe0 ;# to 1fe0:7c00, or 0x27a00
+    mov es, ax
+    mov si, bp
+    mov di, bp
+    mov cx, 0x100
+    rep movs WORD PTR es:[di],WORD PTR ds:[si]
+    jmp 0x1fe0:0x7c5e
+    .word 0
+    .word 0x60
+start1:
+    mov ds, ax
+    mov ss, ax
+    lea sp, [bp-0x60]
+    sti ;# reenable interrupts
+;# using just below bootblock, to top of stack, for local variables/workspace
+    cmp BYTE PTR [bp+0x24],0xff ;# drive number
+    jne skip
+;# store number of bootdrive from DL:
+;# https://en.wikibooks.org/wiki/X86_Assembly/Bootloaders#Technical_Details
+    mov BYTE PTR [bp+0x24],dl
+skip:
+    mov WORD PTR [bp-0x40],0x10
+    mov WORD PTR [bp-0x3e],0x1
+    call outstring
+    .asciz "FreeDOS"
+continue:
+    mov    si,WORD PTR [bp+0x1c]
+    mov    di,WORD PTR [bp+0x1e]
   8a:	add    si,WORD PTR [bp+0xe]
   8d:	adc    di,0x0
   90:	mov    WORD PTR [bp-0x2e],si
@@ -147,23 +155,24 @@ Disassembly of section .data:
  143:	adc    dx,WORD PTR [bp-0x24]
  146:	call   0x16d
  149:	jae    0x130
- 14b:	call   0x165
- 14e:	and    BYTE PTR [di+0x72],ah
- 151:	jb     0x153
+ 14b:	call   outstring
+    .asciz " err"
  153:	xor    ah,ah
  155:	int    0x16
  157:	int    0x19
  159:	mov    bl,BYTE PTR [bp+0x24]
  15c:	jmp    DWORD PTR [bp+0x5a]
- 15f:	xor    bx,bx
- 161:	mov    ah,0xe
- 163:	int    0x10
- 165:	pop    si
- 166:	lods   al,BYTE PTR ds:[si]
- 167:	push   si
- 168:	cmp    al,0x0
- 16a:	jne    0x15f
- 16c:	ret    
+outloop:
+    xor bx, bx ;# white on black
+    mov ah, 0xe ;# character to screen
+    int 0x10 ;# BIOS service
+outstring:
+    pop si ;# string stored at return address, right after call
+    lods al,BYTE PTR ds:[si] ;# load up the next byte
+    push si
+    cmp al, 0x0 ;# end of string?
+    jne outloop
+    ret ;# at this point the return address is just past the ASCIZ string
  16d:	push   si
  16e:	mov    WORD PTR [bp-0x38],ax
  171:	mov    WORD PTR [bp-0x36],dx
@@ -230,5 +239,6 @@ Disassembly of section .data:
  1fa:	pop    cx
  1fb:	push   bx
  1fc:	add    BYTE PTR [bx+si],al
- 1fe:	push   bp
- 1ff:	stos   BYTE PTR es:[di],al
+    .org 0x1fe
+    .byte 0x55, 0xaa ;# boot signature
+;# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
